@@ -1,3 +1,6 @@
+v1.10
+	Refactered Ancile into Ancile Core project and moved all plugins to their own repository.
+
 v1.9
 	Misc changes to various scripts
 	Created stand alone "debuginfo.cmd" in "lib" to help debug issues.
