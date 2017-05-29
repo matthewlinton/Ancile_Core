@@ -12,10 +12,6 @@ IF NOT "%APPNAME%"=="Ancile" (
 	EXIT
 )
 
-IF %NETCONNECTED% EQU 0 (
-	SET AUTOMATICUPDATES=N
-)
-
 @REM create the temp directory
 IF NOT EXIST "%UPDATETEMP%" MKDIR "%UPDATETEMP%" >nul 2>&1
 

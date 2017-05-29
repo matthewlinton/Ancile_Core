@@ -8,10 +8,6 @@ IF NOT "%APPNAME%"=="Ancile" (
 	EXIT
 )
 
-IF %NETCONNECTED% EQU 0 (
-	SET TIMESYNC=N
-)
-
 ECHO [%DATE% %TIME%] BEGIN NTP SYNC >> "%LOGFILE%"
 
 Setlocal EnableDelayedExpansion
