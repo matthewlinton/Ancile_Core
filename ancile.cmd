@@ -114,7 +114,7 @@ IF NOT DEFINED PINGHOST (
 ) ELSE (
 	ping -n 1 %PINGHOST% >nul 2>&1 && ECHO Network Connected >> "%LOGFILE%"
 )
-pause
+
 :SYSPREP
 @REM Take ownership of registry keys
 ECHO. >> "%LOGFILE%"
