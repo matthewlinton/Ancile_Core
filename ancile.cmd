@@ -5,11 +5,12 @@
 :INIT
 @REM Configure the default environment
 SET APPNAME=Ancile
-SET VERSION=1.10
+SET VERSION=1.11
 
 @REM Make sure the path variable contians everything we need
 SET PATH=%PATH%;%SYSTEMROOT%;%SYSTEMROOT%\system32;%SYSTEMROOT%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
 
+@REM Generate universal non locale specific date
 FOR /F "usebackq tokens=1,2 delims==" %%i IN (`wmic os get LocalDateTime /VALUE 2^>NUL`) DO (
 	IF '.%%i.'=='.LocalDateTime.' SET ldt=%%j
 )
@@ -69,7 +70,7 @@ FOR %%i IN ("%LOGFILE%") DO (
 @REM Begin Logging
 ECHO [%DATE% %TIME%] ### %APPNAME% v%VERSION% ################################# >> "%LOGFILE%"
 ECHO [%DATE% %TIME%] Created by Matthew Linton >> "%LOGFILE%"
-ECHO [%DATE% %TIME%] https://bitbucket.org/matthewlinton/ancile/ >> "%LOGFILE%"
+ECHO [%DATE% %TIME%] https://bitbucket.org/ancile_development/ >> "%LOGFILE%"
 IF "%DEBUG%"=="Y" ECHO [%DATE% %TIME%] Debugging Enabled >> "%LOGFILE%"
 IF NOT "%IDSTRING%"=="" ECHO %IDSTRING%>> "%LOGFILE%"
 ECHO [%DATE% %TIME%] ########################################################## >> "%LOGFILE%"
@@ -77,52 +78,38 @@ ECHO [%DATE% %TIME%] ########################################################## 
 VER >> "%LOGFILE%"
 
 @REM Make sure we're running as an administrator
-net session >nul 2>&1
+@REM Better admin check thanks to bl0ck0ut (https://voat.co/v/Ancile/1843979)
+@REM Check if user is part of the local admin group
+SET admin=N
+SET domain=%USERDOMAIN%\
+IF /i "%domain%"=="%COMPUTERNAME%\" SET domain=
+SET user=%domain%%username%
+FOR /f "Tokens=*" %%a IN ('net localgroup administrators^| find /i "%user%"') DO ( SET admin=Y )
+@REM Check for administrative rights by trying to set the archive attribute on the hosts file
+SET priv=Y
+FOR /f "Tokens=*" %%a IN ('attrib +A %systemroot%\System32\drivers\etc\hosts^| find /i "Access denied"') DO ( SET priv=N )
+@REM Are we an Administrator? 
 IF NOT "%CHECKADMIN%"=="N" (
-	IF %ERRORLEVEL% NEQ 0 (
-		ECHO FATAL ERROR: User does not have Administrative rights. >> "%LOGFILE%"
-		whoami /all >> "%LOGFILE%" 2>&1
-		ECHO This script requires Administrative privileges.
+	IF NOT "%priv%"=="Y" ( 
 		ECHO.
-		SET /A ANCERRLVL+=1
-		GOTO ERRORCHECK
-	)
-) ELSE (
-	ECHO Admin check disabled. Enabling Debug by default.
-	ECHO WARNING: User has disabled Admin Check. Enabling Debug. >> "%LOGFILE%"
-	SET DEBUG=Y
+		ECHO Ancile requires Administrative privlages
+		ECHO Press CTRL+C to cancel. 
+		PAUSE
+	) 
 )
 
 @REM Log System information when Debugging
 IF "%DEBUG%"=="Y" (
-	ECHO Collecting System Information
+	ECHO Debugging enabled: Collecting System Information
 	ECHO %0 >> "%LOGFILE%"
-	DIR "%CURRDIR%" >> "%LOGFILE%"
-	whoami /all >> "%LOGFILE%" 2>&1
+	whoami /GROUPS >> "%LOGFILE%" 2>&1
 	systeminfo >> "%LOGFILE%"
 	SET >> "%LOGFILE%"
 	powershell -executionpolicy remotesigned -Command $PSVersionTable >> "%LOGFILE%"
 )
 
 @REM Check to see if we're connected to the internet
-ping -n 1 bitbucket.org >nul 2>&1
-
-IF "%NETCONNECTED%"=="" (
-	ECHO Checking Network Connection: >> "%LOGFILE%"
-	
-	IF %ERRORLEVEL% NEQ 0 (
-		ECHO Unable to connect to the internet >> "%LOGFILE%"
-		ECHO Network Connection Not Detected
-		tracert bitbucket.org >> "%LOGFILE%" 2>&1
-		SET NETCONNECTED=0
-		SET /A ANCERRLVL+=1
-	) ELSE (
-		ECHO Network Connection Detected >> "%LOGFILE%"
-		SET NETCONNECTED=1
-	)
-) ELSE (
-	ECHO NETCONNECTED manually set "%NETCONNECTED%" >> "%LOGFILE%"
-)
+ping -n 1 %PINGHOST% >nul 2>&1 && ECHO Network Connected >> "%LOGFILE%"
 
 :SYSPREP
 @REM Take ownership of registry keys

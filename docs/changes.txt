@@ -1,5 +1,16 @@
+v1.11
+	Cleaned up info in debuginfo.cmd
+	Updated log heading URL
+	Added PINGHOST configuration option
+	Removed NETCONNECTED configuration option
+	Removed tracert for network issues and warning for no network connection detected
+	Lowered the amount of info collected when enabling debugging
+	Removed auto enable debug when skipping admin check
+	Replaced admin check with a warning. Allow the user to continue anyway
+	Update Admin check with better version by bl0ck0ut
+	
 v1.10
-	Refactered Ancile into Ancile Core project and moved all plugins to their own repository.
+	Refactered Ancile into Ancile Core project and moved all plugins to their own repository
 
 v1.9
 	Misc changes to various scripts
