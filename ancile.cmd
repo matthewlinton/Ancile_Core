@@ -109,8 +109,12 @@ IF "%DEBUG%"=="Y" (
 )
 
 @REM Check to see if we're connected to the internet
-ping -n 1 %PINGHOST% >nul 2>&1 && ECHO Network Connected >> "%LOGFILE%"
-
+IF NOT DEFINED PINGHOST (
+	ping -n 1 bitbucket.org >nul 2>&1 && ECHO Network Connected >> "%LOGFILE%"
+) ELSE (
+	ping -n 1 %PINGHOST% >nul 2>&1 && ECHO Network Connected >> "%LOGFILE%"
+)
+pause
 :SYSPREP
 @REM Take ownership of registry keys
 ECHO. >> "%LOGFILE%"
