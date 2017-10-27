@@ -79,15 +79,9 @@ VER >> "%LOGFILE%"
 
 @REM Make sure we're running as an administrator
 @REM Better admin check thanks to bl0ck0ut (https://voat.co/v/Ancile/1843979)
-@REM Check if user is part of the local admin group
-SET admin=N
-SET domain=%USERDOMAIN%\
-IF /i "%domain%"=="%COMPUTERNAME%\" SET domain=
-SET user=%domain%%username%
-FOR /f "Tokens=*" %%a IN ('net localgroup administrators^| find /i "%user%"') DO ( SET admin=Y )
 @REM Check for administrative rights by trying to set the archive attribute on the hosts file
 SET priv=Y
-FOR /f "Tokens=*" %%a IN ('attrib +A %systemroot%\System32\drivers\etc\hosts^| find /i "Access denied"') DO ( SET priv=N )
+FOR /f "Tokens=*" %%a IN ('attrib +A %SYSTEMROOT%\System32\drivers\etc\hosts^| find /i "Access denied"') DO ( SET priv=N )
 @REM Are we an Administrator? 
 IF NOT "%CHECKADMIN%"=="N" (
 	IF NOT "%priv%"=="Y" ( 
