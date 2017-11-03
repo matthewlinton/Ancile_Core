@@ -1,5 +1,6 @@
 v1.12
 	Removed unnecessary admin checks
+	Changed powershell execution policy to "Bypass"
 	
 v1.11
 	Cleaned up info in debuginfo.cmd

@@ -37,18 +37,18 @@ IF "%AUTOMATICUPDATES%"=="N" (
 				
 				@REM Download update file
 				IF "%DEBUG%"=="Y" (
-					powershell -executionpolicy remotesigned -Command "(New-Object System.Net.WebClient).DownloadFile('%%j', '%UPDATETEMP%\%%~nxi\%%~nxj')" >> "%LOGFILE%" 2>&1
+					powershell -executionpolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('%%j', '%UPDATETEMP%\%%~nxi\%%~nxj')" >> "%LOGFILE%" 2>&1
 				) ELSE (
-					powershell -executionpolicy remotesigned -Command "(New-Object System.Net.WebClient).DownloadFile('%%j', '%UPDATETEMP%\%%~nxi\%%~nxj')" >nul 2>&1
+					powershell -executionpolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('%%j', '%UPDATETEMP%\%%~nxi\%%~nxj')" >nul 2>&1
 				)
 				
 				IF EXIST "%UPDATETEMP%\%%~nxi\%%~nxj" (
 					@REM Extract update file
 					IF "%DEBUG%"=="Y" (
 						ECHO Extracting "%UPDATETEMP%\%%~nxi\%%~nxj" to "%DATADIR%\%%~nxi\" >> "%LOGFILE%"
-						powershell -executionpolicy remotesigned -Command "Import-Module -Name '%UNZIPMODULE%'; Expand-ZipFile -ZipFilePath '%UPDATETEMP%\%%~nxi\%%~nxj' -DestinationDirectoryPath '%DATADIR%\%%~nxi\' -OverwriteWithoutPrompting" >> "%LOGFILE%" 2>&1
+						powershell -executionpolicy Bypass -Command "Import-Module -Name '%UNZIPMODULE%'; Expand-ZipFile -ZipFilePath '%UPDATETEMP%\%%~nxi\%%~nxj' -DestinationDirectoryPath '%DATADIR%\%%~nxi\' -OverwriteWithoutPrompting" >> "%LOGFILE%" 2>&1
 					) ELSE (
-						powershell -executionpolicy remotesigned -Command "Import-Module -Name '%UNZIPMODULE%'; Expand-ZipFile -ZipFilePath '%UPDATETEMP%\%%~nxi\%%~nxj' -DestinationDirectoryPath '%DATADIR%\%%~nxi\' -OverwriteWithoutPrompting" >nul 2>&1
+						powershell -executionpolicy Bypass -Command "Import-Module -Name '%UNZIPMODULE%'; Expand-ZipFile -ZipFilePath '%UPDATETEMP%\%%~nxi\%%~nxj' -DestinationDirectoryPath '%DATADIR%\%%~nxi\' -OverwriteWithoutPrompting" >nul 2>&1
 					)
 				) ELSE (
 					ECHO ERROR: Failed to download update from "%%j" >> "%LOGFILE%"

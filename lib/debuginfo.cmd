@@ -88,10 +88,10 @@ ECHO. >> "%_logfile%"
 ECHO Fetching Powershell Environment ...
 ECHO [%DATE% %TIME%] BEGIN POWERSHELL ############################################################ >> "%_logfile%"
 
-powershell -executionpolicy remotesigned -Command $PSVersionTable >> "%_logfile%"
+powershell -executionpolicy Bypass -Command $PSVersionTable >> "%_logfile%"
 
 ECHO Execution Policy: >> "%_logfile%"
-powershell -executionpolicy remotesigned -Command get-executionpolicy >> "%_logfile%"
+powershell -executionpolicy Bypass -Command get-executionpolicy >> "%_logfile%"
 
 ECHO [%DATE% %TIME%] END POWERSHELL ############################################################ >> "%_logfile%"
 ECHO. >> "%_logfile%"

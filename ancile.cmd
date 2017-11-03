@@ -5,7 +5,7 @@
 :INIT
 @REM Configure the default environment
 SET APPNAME=Ancile
-SET VERSION=1.11
+SET VERSION=1.12
 
 @REM Make sure the path variable contians everything we need
 SET PATH=%PATH%;%SYSTEMROOT%;%SYSTEMROOT%\system32;%SYSTEMROOT%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
@@ -99,7 +99,7 @@ IF "%DEBUG%"=="Y" (
 	whoami /GROUPS >> "%LOGFILE%" 2>&1
 	systeminfo >> "%LOGFILE%"
 	SET >> "%LOGFILE%"
-	powershell -executionpolicy remotesigned -Command $PSVersionTable >> "%LOGFILE%"
+	powershell -executionpolicy Bypass -Command $PSVersionTable >> "%LOGFILE%"
 )
 
 @REM Check to see if we're connected to the internet
